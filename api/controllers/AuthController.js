@@ -87,11 +87,36 @@ var AuthController = {
    * @param {Object} req
    * @param {Object} res
    */
+
   register: function (req, res) {
-    res.view({
-      errors: req.flash('error')
-    });
+    console.log(req.body);
+    User.create({ username : req.body.username,
+                  email    : req.body.email
+                }, function(err, user) {
+                  if(user) {
+                    var token = new Buffer(user.username + user.createdAt).toString('base64');                   
+                    Passport.create({
+                      protocol    : 'local',
+                      user        : user.id,
+                      password    : req.body.password,
+                      accessToken : token
+                    }, function(err, passport) {
+                      if(passport) {
+                        return res.json({
+                          accessToken: passport.accessToken
+                        });
+                      } else {
+                        res.status(401);
+                        return res.send('invalid data');
+                      }
+                    });
+                  } else {
+                    res.status(401);
+                    return res.send('invalid data');
+                  }
+                });
   },
+
 
   /**
    * Create a third-party authentication endpoint
