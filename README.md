@@ -1,5 +1,5 @@
-Authentication and Authorization
-================================
+API Authentication
+==================
 
 This is a Sails example application to demonstrate authentication and authorization using `Passport.js`. This explains how a user can authenticate with a username and password. And also explains API authentication using bearer tokens.
 
